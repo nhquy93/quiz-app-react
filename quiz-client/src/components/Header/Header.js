@@ -1,4 +1,4 @@
-import { Avatar, Col, Input, Row, Typography } from "antd";
+import { Avatar, Input, Typography } from "antd";
 import {
   MenuOutlined,
   SearchOutlined,
@@ -8,18 +8,22 @@ import {
 import React from "react";
 import "./Header.css";
 
+const { Title, Text } = Typography;
+
 export default function Header() {
   return (
     <div className="header">
       <div className="header__menu">
-        <MenuOutlined style={{ fontSize: "24px", color: "#fff" }} />
+        <MenuOutlined
+          style={{ fontSize: "24px", color: "#fff", cursor: "pointer" }}
+        />
         <Avatar size="large" icon={<UserOutlined />} />
       </div>
       <div className="header__title">
-        <Typography.Text level={3}>Hello, {"James"}</Typography.Text>
-        <Typography.Title level={4} style={{ margin: 0 }}>
+        <Text level={3}>Hello, {"James"}</Text>
+        <Title level={4} style={{ margin: 0 }}>
           Let's test your knowledge
-        </Typography.Title>
+        </Title>
       </div>
       <div className="header__searchbox">
         <Input

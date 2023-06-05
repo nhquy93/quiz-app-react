@@ -1,22 +1,5 @@
-.content {
-  flex: 5;
-  background-color: #f3f3f3;
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
-  padding: 0 20px;
-}
-
-.sticky-button {
-    text-align: center;
-    max-width: 320px;
-    position: sticky;
-    bottom: 0;
-    transform: translateX(15%);
-    visibility: hidden;
-}
-
 @media screen and (min-width: 576px) {
-    .ant-tabs-tab {
-        font-size: 24px !important;
-    }
+  .ant-tabs-tab {
+    font-size: 24px !important;
+  }
 }

@@ -1,8 +1,8 @@
 import React from "react";
 import "./Home.css";
 import { Tabs, Row, Col, Typography } from "antd";
-import NavDivider from "../../components/Nav-Divider/NavDivider";
 import QuizCard from "../../components/Quiz-Card/QuizCard";
+import ContinueCard from "../../components/Continue-Card/ContinueCard";
 
 const { Title } = Typography;
 
@@ -42,15 +42,18 @@ const items = [
 
 export default function Home() {
   return (
-    <div className="content">
-      <NavDivider />
+    <>
       <Tabs defaultActiveKey="1" items={items} centered />
-      <Title level={4} style={{ margin: "12px 0" }}>
-        Continue Quiz
-      </Title>
-      {/* <div className="sticky-button">
-        <StartButton />
-      </div> */}
-    </div>
+      <div className="resume-container">
+        <Title level={4} style={{ margin: "12px 0" }}>
+          Continue Quiz
+        </Title>
+        <Row>
+          <Col xs={24} sm={12} md={8}>
+            <ContinueCard />
+          </Col>
+        </Row>
+      </div>
+    </>
   );
 }

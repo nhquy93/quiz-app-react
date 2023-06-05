@@ -6,12 +6,14 @@ import {
   FileTextOutlined,
   StarFilled,
 } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 const { Text } = Typography;
 
 export default function QuizCard() {
+  const navigate = useNavigate();
   return (
-    <Card className="quiz-card">
+    <Card onClick={() => navigate("/detail")} className="quiz-card">
       <Row>
         <Col className="quiz-card__image" span={6}>
           <div></div>

@@ -1,9 +1,10 @@
 .start {
-  width: 100%;
+  min-width: 320px;
+  max-width: 480px;
   height: 42px;
 }
 
-button.ant-btn {
+.start > button.ant-btn {
   border: none;
   background: linear-gradient(to right, #008dff, #7ab9ec);
 }

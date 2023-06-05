@@ -1,0 +1,38 @@
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.detail-content {
+  font-size: 24px;
+}
+
+ul.list-guides {
+  padding: 0 20px;
+}
+
+ul.list-guides > li {
+  margin: 12px 0;
+}
+
+ul.list-guides > li::marker {
+  margin-right: 1em;
+}
+
+ul.list-guides > li > .ant-typography {
+  position: relative;
+  left: 20px;
+  font-size: 16px;
+}
+
+.sticky-button {
+  text-align: center;
+}
+
+@media screen and (min-width: 576px) {
+  .detail-content > .ant-typography {
+    font-size: 28px;
+  }
+}

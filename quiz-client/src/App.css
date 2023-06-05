@@ -1,6 +1,18 @@
 .App {
+  height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+.content {
+  background-color: #f3f3f3;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  padding: 0 20px;
   flex: 1;
-  height: 100vh;
+}
+
+.footer {
+  padding: 2em;
+  background-color: #f3f3f3;
 }

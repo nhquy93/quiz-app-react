@@ -1,0 +1,21 @@
+.submit-quiz {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ant-avatar.active {
+    background-color: #008bff;
+}
+
+.submit-quiz > .ant-btn {
+  min-width: 180px;
+  height: 40px;
+  color: #008bff;
+  border-color: #008bff;
+}
+
+.submit-quiz > .ant-btn:hover {
+    color: #fff;
+    background-color: #008bff;
+}

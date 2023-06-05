@@ -3,6 +3,11 @@
   width: 100%;
 }
 
+.quiz-card:hover {
+  cursor: pointer;
+  border: 3px solid #008bff;
+}
+
 .quiz-card > .ant-card-body {
   padding: 16px;
 }
