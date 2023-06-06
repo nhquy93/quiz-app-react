@@ -54,7 +54,7 @@
 
 @media screen and (min-width: 576px) {
   .header__menu .anticon,
-  .header__menu > .ant-avatar-circle {
+  .header__menu .ant-avatar-circle {
     font-size: 32px;
   }
   .header__title {
@@ -75,7 +75,7 @@
     font-size: 20px;
   }
   .header__title__detail,
-  .header__title > h4,
+  .header__title h4,
   .header__title__detail h4,
   .header__title__detail .anticon-star {
     font-size: 24px;
