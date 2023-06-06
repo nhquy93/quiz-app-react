@@ -1,5 +1,5 @@
 import { Avatar, Button, List, Tabs, Typography } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Quiz.css";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
@@ -31,16 +31,19 @@ export default function Quiz() {
   ];
   const [tabActive, setTabActive] = useState(1);
 
-  const hdlTabClick = (tabNodeKey) => setTabActive(tabNodeKey - 1);
+  const hdlTabClick = (tabNodeKey) => {
+    setTabActive(tabNodeKey);
+};
   const hdlBack = () => {
-    if (tabActive === 1) return;
+    if (+tabActive === 1) return;
     setTabActive((prevState) => prevState - 1);
   };
   const hdlNext = () => {
-    if (tabActive === questions.length) return;
+    if (+tabActive === questions.length) return;
     setTabActive((prevState) => prevState + 1);
   };
 
+  /// Selected Answer
   const hdlSelectedOpt = (e) => console.log(e);
 
   return (
@@ -68,7 +71,7 @@ export default function Quiz() {
       <div className="submit-quiz">
         <Avatar
           onClick={hdlBack}
-          className={tabActive === 1 ? "" : "active"}
+          className={+tabActive === 1 ? "" : "active"}
           style={{ cursor: "pointer", marginRight: 24 }}
           size={40}
           icon={<LeftOutlined />}
@@ -78,7 +81,7 @@ export default function Quiz() {
         </Button>
         <Avatar
           onClick={hdlNext}
-          className={tabActive === questions.length ? "" : "active"}
+          className={+tabActive === questions.length ? "" : "active"}
           style={{ cursor: "pointer", marginLeft: 24 }}
           size={40}
           icon={<RightOutlined />}
