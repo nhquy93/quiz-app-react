@@ -1,5 +1,5 @@
 import { Avatar, Button, List, Tabs, Typography } from "antd";
-import React, { useEffect, useState } from "react";
+import { React, useState } from "react";
 import "./Quiz.css";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
