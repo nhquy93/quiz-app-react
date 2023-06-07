@@ -5,6 +5,8 @@ import App from "./App";
 import { ConfigProvider } from "antd";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
+import { Provider } from "react-redux";
+import store from "./redux/store";
 
 const primaryTheme = {
   components: {
@@ -17,11 +19,13 @@ const primaryTheme = {
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <ConfigProvider theme={primaryTheme}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </ConfigProvider>
+    <Provider store={store}>
+      <ConfigProvider theme={primaryTheme}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ConfigProvider>
+    </Provider>
   </React.StrictMode>
 );
 
