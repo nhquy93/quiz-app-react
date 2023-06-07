@@ -1,3 +1,5 @@
+import { createSlice } from "@reduxjs/toolkit";
+
 const data = [
   {
     key: "1",
@@ -41,14 +43,25 @@ const initialState = {
   contQuiz: {},
 };
 
-const homeReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case "GET_QUIZZES": {
-      return { ...state, quizList: data };
-    }
-    default:
-      return state;
-  }
-};
+// const homeReducer = (state = initialState, action) => {
+//   switch (action.type) {
+//     case "GET_QUIZZES": {
+//       return { ...state, quizList: data };
+//     }
+//     default:
+//       return state;
+//   }
+// };
 
-export default homeReducer;
+const homeSlice = createSlice({
+  name: "home",
+  initialState,
+  reducers: {
+    getList: state => {
+    }
+  }
+})
+
+export const { getList } = homeSlice.actions;
+
+export default homeSlice.reducer;
