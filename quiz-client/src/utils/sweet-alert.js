@@ -10,3 +10,14 @@ export async function toast(type, msg) {
         title: msg
     });
 }
+
+export async function toastConfirm(type, msg) {
+    return Swal.fire({
+        position: "top",
+        icon: type,
+        showConfirmButton: true,
+        timer: 30000,
+        toast: true,
+        title: msg
+    });
+}

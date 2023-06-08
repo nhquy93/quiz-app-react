@@ -11,13 +11,14 @@ import { Time2String } from "../../utils/Time2String";
 
 const { Text } = Typography;
 
-export default function QuizCard({ title, total, timeExpired, rate }) {
+export default function QuizCard({ id, title, total, timeExpired, rate }) {
   const navigate = useNavigate();
   return (
-    <Card onClick={() => navigate("/detail")} className="quiz-card">
+    <Card onClick={() => navigate(`/detail/${id}`)} className="quiz-card">
       <Row>
         <Col className="quiz-card__image" span={6}>
-          <div></div>
+          <div>
+          </div>
         </Col>
         <Col className="quiz-card__info" span={12}>
           <Space direction="vertical">

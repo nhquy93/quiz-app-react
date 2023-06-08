@@ -7,23 +7,39 @@ import { Typography, Row, Col, Space, Avatar } from "antd";
 import React from "react";
 import "./Detail.css";
 import StartButton from "../../components/Start-Button/StartButton";
+import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Time2String } from "../../utils/Time2String";
 
 const { Title, Text } = Typography;
 
 export default function Detail() {
+  const { questionGroupId } = useParams();
+
+  const topicList = useSelector((store) => store.topicsSlice.topicList);
+
+  let questionGroup = {};
+  topicList.forEach((groups) => {
+    const item = groups.questionGroups.find((x) => x.id == questionGroupId);
+    if (item) {
+      questionGroup = { ...item };
+      return questionGroup;
+    }
+  });
+
   const describes = [
     {
-      title: "10 Question(s)",
+      title: `${questionGroup.total} Question(s)`,
       desc: "10 point for a correct answer",
       icon: <FileDoneOutlined />,
     },
     {
-      title: "1 hour 15 mins",
+      title: `${Time2String(questionGroup.timeExpired)}`,
       desc: "Total duration of the quiz",
       icon: <ClockCircleOutlined />,
     },
     {
-      title: "10 Question(s)",
+      title: `Win ${questionGroup.total} star`,
       desc: "Answer all questions correctly",
       icon: <StarOutlined />,
     },

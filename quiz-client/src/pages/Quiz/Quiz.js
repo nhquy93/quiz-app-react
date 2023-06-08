@@ -1,39 +1,49 @@
 import { Avatar, Button, List, Tabs, Typography } from "antd";
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import "./Quiz.css";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addAnswered } from "../../store/answered/answered-slice";
+import { toastConfirm } from "../../utils/sweet-alert";
 
 const { Title, Text } = Typography;
 const { Item } = List;
 
 export default function Quiz() {
-  const questions = [
-    {
-      key: "1",
-      label: "1",
-      children: [
-        {
-          question: "Question 1",
-          answers: ["Option 1", "Option 2", "Option 3", "Option 4"],
-        },
-      ],
-    },
-    {
-      key: "2",
-      label: "2",
-      children: [
-        {
-          question: "Question 2",
-          answers: ["Option 1", "Option 2", "Option 3", "Option 4"],
-        },
-      ],
-    },
-  ];
+  const { questionGroupId } = useParams();
+  const topicList = useSelector((store) => store.topicsSlice.topicList);
+  const answeredList = useSelector((store) => store.answeredSlice.answeredList);
+
+  let questionGroup = {};
+  topicList.forEach((groups) => {
+    const item = groups.questionGroups.find((x) => x.id === questionGroupId);
+    if (item) {
+      questionGroup = { ...item };
+      return questionGroup;
+    }
+  });
+
+  const questions = [];
+  questionGroup?.questions?.map((item, index) => {
+    questions.push({
+      key: (index + 1).toString(),
+        label: (index + 1).toString(),
+        children: [
+          {
+            id: item.id,
+            answer: item.answer,
+            question: item.name,
+            answers: [...(item.answerList)].filter(x => x != "")
+          }
+        ]
+    })});
+
   const [tabActive, setTabActive] = useState(1);
 
   const hdlTabClick = (tabNodeKey) => {
     setTabActive(tabNodeKey);
-};
+  };
   const hdlBack = () => {
     if (+tabActive === 1) return;
     setTabActive((prevState) => prevState - 1);
@@ -43,9 +53,27 @@ export default function Quiz() {
     setTabActive((prevState) => prevState + 1);
   };
 
+  const dispatch = useDispatch();
   /// Selected Answer
-  const hdlSelectedOpt = (e) => console.log(e);
+  const hdlSelectedOpt = (e) => {
+    dispatch(addAnswered({...e}));
+  };
 
+  function onSubmitQuiz() {
+    let score = 0;
+    answeredList.map((item)=>{
+      if(item.answer == (item.idx + 1)) {
+        score +=1;
+      }
+    })
+
+    toastConfirm("success", `Congratulations! Your score: ${score}/${answeredList.length}`, true);
+    console.log(`${score}/${answeredList.length}`);
+  }
+  console.log("ass", answeredList);
+
+  
+  //console.log(arr);
   return (
     <>
       <Tabs
@@ -56,13 +84,16 @@ export default function Quiz() {
               {q.label}
             </Avatar>
           ),
-          children: q.children.map((c) => (
+          children: q.children.map((c, idx) => (
             <SelectionListLayout
+              key={idx}
+              id={c.id}
+              answer={c.answer}
               question={c.question}
               answers={c.answers}
               selectedOpt={hdlSelectedOpt}
             />
-          )),
+          ))
         }))}
         activeKey={tabActive.toString()}
         defaultActiveKey="1"
@@ -76,7 +107,7 @@ export default function Quiz() {
           size={40}
           icon={<LeftOutlined />}
         />
-        <Button type="default" onClick={() => {}}>
+        <Button type="default" onClick={() => {onSubmitQuiz()}}>
           Submit Quiz
         </Button>
         <Avatar
@@ -91,12 +122,15 @@ export default function Quiz() {
   );
 }
 
-function SelectionListLayout({ question, answers, selectedOpt }) {
+function SelectionListLayout({ id, answer, question, answers, selectedOpt }) {
+  //console.log(question, answers);
   const [selectAnswer, setSelectAnswer] = useState(null);
   const hdlClick = (selected) => {
-    setSelectAnswer(selected);
+    //debugger
+    setSelectAnswer(selected.idx);
     selectedOpt(selected);
   };
+
   return (
     <>
       <Title style={{ marginTop: 12 }} level={5}>
@@ -105,7 +139,7 @@ function SelectionListLayout({ question, answers, selectedOpt }) {
       <List
         dataSource={answers}
         renderItem={(e, idx) => (
-          <Item key={idx} onClick={() => hdlClick(idx)}>
+          <Item key={idx} onClick={() => hdlClick({id, answer, idx})}>
             <Item.Meta
               avatar={
                 <Avatar className={idx === selectAnswer ? "active" : ""}>

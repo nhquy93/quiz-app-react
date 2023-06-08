@@ -15,9 +15,13 @@ import {
   persistStore,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import { answeredReducer } from "./answered/answered-slice";
+import { authReducer } from "./auth/auth-slice";
 
 const rootReducer = combineReducers({
   topicsSlice: topicsReducer,
+  answeredSlice: answeredReducer,
+  authSlice: authReducer
 });
 
 const persistConfig = {

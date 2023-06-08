@@ -20,10 +20,10 @@ export default function Header(props) {
   return (
     <div className="header">
       {pathname === "/" && <HomeHeader username="James" />}
-      {pathname === "/detail" && (
+      {pathname.includes("detail") && (
         <DetailHeader title="UI UX Design" desc="GET 100 Points" rate="4.8" />
       )}
-      {pathname === "/start" && (
+      {pathname.includes("start") && (
         <StartHeader title="UI UX Design" timeExpired={900} />
       )}
     </div>
