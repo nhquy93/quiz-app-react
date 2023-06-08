@@ -2,11 +2,22 @@ import { Avatar, Button, List, Tabs, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import "./Quiz.css";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { getQuestions } from "../../redux/quiz/quizSlice";
 
 const { Title, Text } = Typography;
 const { Item } = List;
 
 export default function Quiz() {
+  const quizzes = useSelector((state) => state.quiz.questions);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getQuestions());
+  }, []);
+
+  console.log(quizzes);
+
   const questions = [
     {
       key: "1",
@@ -33,7 +44,7 @@ export default function Quiz() {
 
   const hdlTabClick = (tabNodeKey) => {
     setTabActive(tabNodeKey);
-};
+  };
   const hdlBack = () => {
     if (+tabActive === 1) return;
     setTabActive((prevState) => prevState - 1);

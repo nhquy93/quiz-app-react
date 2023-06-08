@@ -8,9 +8,11 @@ import {
   SwapOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Header.css";
 import { Link, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { selectSidebar, setExpanded } from "../../redux/sidebar/sidebarSlice";
 
 const { Title, Text } = Typography;
 
@@ -30,28 +32,37 @@ export default function Header(props) {
   );
 }
 
-const HomeHeader = ({ username }) => (
-  <>
-    <div className="header__menu">
-      <MenuOutlined style={{ fontSize: "24px", cursor: "pointer" }} />
-      <Avatar size="large" icon={<UserOutlined />} />
-    </div>
-    <div className="header__title">
-      <Text>Hello, {username}</Text>
-      <Title level={4} style={{ margin: 0 }}>
-        Let's test your knowledge
-      </Title>
-    </div>
-
-    <div className="header__searchbox">
-      <Input
-        placeholder="Search"
-        prefix={<SearchOutlined style={{ color: "#008dff" }} />}
-        suffix={<SwapOutlined style={{ color: "#008dff" }} />}
-      />
-    </div>
-  </>
-);
+const HomeHeader = ({ username }) => {
+  const [collapse, setCollapse] = useState(true);
+  const dispatch = useDispatch();
+  return (
+    <>
+      <div className="header__menu">
+        <MenuOutlined
+          onClick={() => {
+            setCollapse(!collapse);
+            dispatch(setExpanded(collapse));
+          }}
+          style={{ fontSize: "24px", cursor: "pointer" }}
+        />
+        <Avatar size="large" icon={<UserOutlined />} />
+      </div>
+      <div className="header__title">
+        <Text>Hello, {username}</Text>
+        <Title level={4} style={{ margin: 0 }}>
+          Let's test your knowledge
+        </Title>
+      </div>
+      <div className="header__searchbox">
+        <Input
+          placeholder="Search"
+          prefix={<SearchOutlined style={{ color: "#008dff" }} />}
+          suffix={<SwapOutlined style={{ color: "#008dff" }} />}
+        />
+      </div>
+    </>
+  );
+};
 
 const DetailHeader = ({ title, desc, rate }) => (
   <>

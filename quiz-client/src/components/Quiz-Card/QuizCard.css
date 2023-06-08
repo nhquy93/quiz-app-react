@@ -70,11 +70,11 @@
     width: 100%;
   }
   .title {
-    font-size: 24px;
+    font-size: 18px;
   }
   .quiz-card__rate,
   .questions,
   .time {
-    font-size: 16px;
+    font-size: 14px;
   }
 }
