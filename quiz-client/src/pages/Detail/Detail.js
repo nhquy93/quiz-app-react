@@ -20,7 +20,7 @@ export default function Detail() {
 
   let questionGroup = {};
   topicList.forEach((groups) => {
-    const item = groups.questionGroups.find((x) => x.id == questionGroupId);
+    const item = groups.questionGroups.find((x) => x.id === questionGroupId);
     if (item) {
       questionGroup = { ...item };
       return questionGroup;

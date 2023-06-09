@@ -11,13 +11,9 @@ export async function toast(type, msg) {
     });
 }
 
-export async function toastConfirm(type, msg) {
+export async function toastConfirm(msg, icon) {
     return Swal.fire({
-        position: "top",
-        icon: type,
-        showConfirmButton: true,
-        timer: 30000,
-        toast: true,
-        title: msg
+        icon: icon,
+        text: msg
     });
 }

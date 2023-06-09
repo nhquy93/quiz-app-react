@@ -1,5 +1,5 @@
 import { Avatar, Button, List, Tabs, Typography } from "antd";
-import { React, useEffect, useState } from "react";
+import { React, useState } from "react";
 import "./Quiz.css";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
@@ -12,6 +12,7 @@ const { Item } = List;
 
 export default function Quiz() {
   const { questionGroupId } = useParams();
+  const dispatch = useDispatch();
   const topicList = useSelector((store) => store.topicsSlice.topicList);
   const answeredList = useSelector((store) => store.answeredSlice.answeredList);
 
@@ -20,6 +21,7 @@ export default function Quiz() {
     const item = groups.questionGroups.find((x) => x.id === questionGroupId);
     if (item) {
       questionGroup = { ...item };
+      localStorage.setItem("timeExpired", questionGroup.timeExpired);
       return questionGroup;
     }
   });
@@ -34,16 +36,19 @@ export default function Quiz() {
             id: item.id,
             answer: item.answer,
             question: item.name,
-            answers: [...(item.answerList)].filter(x => x != "")
+            answers: [...(item.answerList)].filter(x => x !== "")
           }
         ]
-    })});
+    })
+    return questions;
+  });
 
   const [tabActive, setTabActive] = useState(1);
 
   const hdlTabClick = (tabNodeKey) => {
     setTabActive(tabNodeKey);
   };
+  
   const hdlBack = () => {
     if (+tabActive === 1) return;
     setTabActive((prevState) => prevState - 1);
@@ -53,7 +58,6 @@ export default function Quiz() {
     setTabActive((prevState) => prevState + 1);
   };
 
-  const dispatch = useDispatch();
   /// Selected Answer
   const hdlSelectedOpt = (e) => {
     dispatch(addAnswered({...e}));
@@ -62,16 +66,15 @@ export default function Quiz() {
   function onSubmitQuiz() {
     let score = 0;
     answeredList.map((item)=>{
-      if(item.answer == (item.idx + 1)) {
+      if(item.answer === (item.idx + 1)) {
         score +=1;
       }
+      return score;
     })
 
-    toastConfirm("success", `Congratulations! Your score: ${score}/${answeredList.length}`, true);
+    toastConfirm(`Your score: ${score}/${answeredList.length}`, "success");
     console.log(`${score}/${answeredList.length}`);
   }
-  console.log("ass", answeredList);
-
   
   //console.log(arr);
   return (
@@ -123,10 +126,8 @@ export default function Quiz() {
 }
 
 function SelectionListLayout({ id, answer, question, answers, selectedOpt }) {
-  //console.log(question, answers);
   const [selectAnswer, setSelectAnswer] = useState(null);
   const hdlClick = (selected) => {
-    //debugger
     setSelectAnswer(selected.idx);
     selectedOpt(selected);
   };

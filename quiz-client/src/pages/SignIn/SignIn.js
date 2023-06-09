@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ButtonPrimary } from "../../components/ButtonPrimary/ButtonPrimary";
 import s from "./style.module.css";
 import { Input } from "../../components/Input/Input";
@@ -18,11 +18,9 @@ export function SignIn(props) {
 
   const submit = async (e) => {
     e.preventDefault();
-    console.log("submited", email, userName);
 
     try {
-      debugger;
-      const user = await ParticipantAPI.create(email, userName);
+      const user = await ParticipantAPI.create({email, userName});
       dispatch(setUser(user));
       await toast("success", "Auth succeed");
       navigate("/");

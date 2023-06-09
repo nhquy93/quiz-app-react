@@ -1,7 +1,6 @@
 import {
   combineReducers,
   configureStore,
-  getDefaultMiddleware,
 } from "@reduxjs/toolkit";
 import { topicsReducer } from "./topics/topics-slice";
 import {
@@ -17,18 +16,20 @@ import {
 import storage from "redux-persist/lib/storage";
 import { answeredReducer } from "./answered/answered-slice";
 import { authReducer } from "./auth/auth-slice";
+import { utilsReducer } from "./utils/utils-slice";
 
 const rootReducer = combineReducers({
   topicsSlice: topicsReducer,
   answeredSlice: answeredReducer,
-  authSlice: authReducer
+  authSlice: authReducer,
+  utilsSlice: utilsReducer
 });
 
 const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  whitelist: [],
+  whitelist: ["authSlice"],
 };
 
 const persistedReducers = persistReducer(persistConfig, rootReducer);

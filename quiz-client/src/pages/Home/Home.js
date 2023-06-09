@@ -6,10 +6,14 @@ import { useSelector } from "react-redux";
 export default function Home() {
   const topicList = useSelector((store) => store.topicsSlice.topicList);
 
+  const searchItems = useSelector((store) => store.utilsSlice.searchItem);
+
   const topics = topicList.map(({ id, name, questionGroups }) => ({
     key: id,
     label: name,
-    children: questionGroups,
+    children: [...questionGroups].filter((x) =>
+      x.name.trim().toUpperCase().includes(searchItems.trim().toUpperCase())
+    ),
   }));
 
   return (

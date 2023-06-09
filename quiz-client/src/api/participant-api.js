@@ -8,7 +8,7 @@ export class ParticipantAPI {
     try {
         const result = (await axios.post(`${BASE_URL}/create`, participant)).data;
         if (result.isSuccessed) {
-          return result.resultObj;
+            return result.resultObj;
         } else {
           toast("error", result.message);
         }
