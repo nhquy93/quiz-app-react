@@ -14,7 +14,6 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../store/auth/auth-slice";
 import { setSearchItems } from "../../store/utils/utils-slice";
-import localStorage from "redux-persist/es/storage";
 
 const { Title, Text } = Typography;
 
@@ -26,6 +25,7 @@ export default function Header(props) {
   const topicList = useSelector((store) => store.topicsSlice.topicList);
   const user = useSelector((store) => store.authSlice.auth.user);
   const [searchItem, setSearchItem] = useState("");
+  const [timeExpired, setTimeExpired] = useState(0);
 
   let questionGroup = {};
 
@@ -38,13 +38,12 @@ export default function Header(props) {
         if (item) {
           questionGroup = { ...item };
           if (questionGroup) {
-            localStorage.setItem("timeExpired", questionGroup.timeExpired);
+            setTimeExpired(questionGroup.timeExpired); // 180
           }
-          return questionGroup;
         }
       });
     }
-  });
+  }, [timeExpired, questionGroupId, topicList.length]);
 
   useEffect(() => {
     dispatch(setSearchItems(searchItem));
@@ -67,7 +66,7 @@ export default function Header(props) {
         <DetailHeader title="UI UX Design" desc="GET 100 Points" rate="4.8" />
       )}
       {pathname.includes("start") && (
-        <StartHeader title="UI UX Design" />
+        <StartHeader title="UI UX Design" timeExpired={timeExpired} />
       )}
     </div>
   );
@@ -134,20 +133,29 @@ const DetailHeader = ({ title, desc, rate }) => (
   </>
 );
 
-const timeExpired = await localStorage.getItem("timeExpired");
+const StartHeader = ({ title, timeExpired }) => {
+  const timeLeft = React.useRef(0);
+  const [timeDisplay, setTimeDisplay] = useState();
 
-const StartHeader = ({ title }) => {
-  const [timeLeft, setTimeLeft] = useState(parseInt(timeExpired, 10));
   useEffect(() => {
+    // if (timeExpired == 0) return;
+    timeLeft.current = timeExpired;
     const interval = setInterval(() => {
-      setTimeLeft(timeLeft - 1);
+      timeLeft.current = timeLeft.current - 1;
+      console.log(timeLeft);
+      const time = getReturnValues();
+      setTimeDisplay(time);
     }, 1000);
     return () => clearInterval(interval);
+  }, [timeExpired]);
+
+  useEffect(() => {
+    // console.log(timeLeft);
   }, [timeLeft]);
 
-  const getReturnValues = (timeLeft) => {
-    const mins = parseInt(timeLeft / 60, 10);
-    const secs = parseInt(timeLeft % 60, 10);
+  const getReturnValues = () => {
+    const mins = parseInt(timeLeft.current / 60, 10);
+    const secs = parseInt(timeLeft.current % 60, 10);
 
     return (
       (mins < 10 ? "0" + mins : mins) + ":" + (secs < 10 ? "0" + secs : secs)
@@ -165,7 +173,7 @@ const StartHeader = ({ title }) => {
         </span>
         <span className="time-box">
           <ClockCircleOutlined />
-          {getReturnValues(timeLeft)}
+          {timeDisplay}
         </span>
       </div>
     </>
