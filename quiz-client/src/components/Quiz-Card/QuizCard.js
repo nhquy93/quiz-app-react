@@ -14,7 +14,7 @@ const { Text } = Typography;
 export default function QuizCard({ id, title, total, timeExpired, rate }) {
   const navigate = useNavigate();
   return (
-    <Card onClick={() => navigate(`/detail/${id}`)} className="quiz-card">
+    <Card onClick={() => navigate(`/detail/${id}`)} id={id} className="quiz-card">
       <Row>
         <Col className="quiz-card__image" span={6}>
           <div>

@@ -142,7 +142,6 @@ const StartHeader = ({ title, timeExpired }) => {
     timeLeft.current = timeExpired;
     const interval = setInterval(() => {
       timeLeft.current = timeLeft.current - 1;
-      console.log(timeLeft);
       const time = getReturnValues();
       setTimeDisplay(time);
     }, 1000);

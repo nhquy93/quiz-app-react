@@ -7,7 +7,7 @@ export default function StartButton() {
   const { questionGroupId } = useParams();
   const navigate = useNavigate();
   return (
-    <Button onClick={() => navigate(`/start/${questionGroupId}`)} className="start" type="primary">
+    <Button onClick={() => navigate(`/start/${questionGroupId}`)} id="startBtn" className="start" type="primary">
       Start Quiz
     </Button>
   );

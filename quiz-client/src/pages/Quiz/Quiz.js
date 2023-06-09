@@ -134,13 +134,13 @@ function SelectionListLayout({ id, answer, question, answers, selectedOpt }) {
 
   return (
     <>
-      <Title style={{ marginTop: 12 }} level={5}>
+      <Title id={`question__${id}`} style={{ marginTop: 12 }} level={5}>
         {question}
       </Title>
       <List
         dataSource={answers}
         renderItem={(e, idx) => (
-          <Item key={idx} onClick={() => hdlClick({id, answer, idx})}>
+          <Item key={idx} id={`answer__${idx}`} onClick={() => hdlClick({id, answer, idx})}>
             <Item.Meta
               avatar={
                 <Avatar className={idx === selectAnswer ? "active" : ""}>
