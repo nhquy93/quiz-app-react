@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "../utils/sweet-alert";
 
-const BASE_URL = "https://localhost:7117/api/participant";
+const BASE_URL = "http://quizappdemo.somee.com/api/participant";
 
 export class ParticipantAPI {
   static async create(participant) {

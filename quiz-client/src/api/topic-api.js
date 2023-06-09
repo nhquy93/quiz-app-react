@@ -1,7 +1,8 @@
 import axios from "axios";
 import { toast } from "../utils/sweet-alert";
 
-const BASE_URL = "https://localhost:7117/api/topic";
+//const BASE_URL = "https://localhost:7117/api/topic";
+const BASE_URL = "http://quizappdemo.somee.com/api/topic";
 
 export class TopicAPI {
   static async fetchAll() {
