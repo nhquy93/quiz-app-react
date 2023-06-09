@@ -36,8 +36,9 @@ export function SignIn(props) {
         Signin <br /> to access your team quiz
       </h2>
       <form onSubmit={submit} className={s.formGroup}>
-        <Input placeholder={"Email"} onTextChange={setEmail} />
+        <Input placeholder={"Email"} onTextChange={setEmail} id={"Email"} />
         <Input
+          id={"UserName"}
           placeholder={"UserName"}
           onTextChange={setUserName}
         />
