@@ -1,29 +1,35 @@
-import React from "react";
 import "./Home.css";
-import { Tabs, Row, Col, Typography } from "antd";
+import { Tabs, Row, Col } from "antd";
 import QuizCard from "../../components/Quiz-Card/QuizCard";
-import ContinueCard from "../../components/Continue-Card/ContinueCard";
-import { useDispatch, useSelector } from "react-redux";
-
-const { Title } = Typography;
+import { useSelector } from "react-redux";
 
 export default function Home() {
-  const quizzes = useSelector((state) => state.home.quizList);
-  const dispatch = useDispatch();
+  const topicList = useSelector((store) => store.topicsSlice.topicList);
+
+  const searchItems = useSelector((store) => store.utilsSlice.searchItem);
+
+  const topics = topicList.map(({ id, name, questionGroups }) => ({
+    key: id,
+    label: name,
+    children: [...questionGroups].filter((x) =>
+      x.name.trim().toUpperCase().includes(searchItems.trim().toUpperCase())
+    ),
+  }));
 
   return (
     <>
       <Tabs
         defaultActiveKey="1"
-        items={quizzes.map((q) => ({
+        items={topics.map((q) => ({
           ...q,
           label: q.label,
           children: (
             <Row gutter={{ xs: 2, sm: 4, md: 24, lg: 32 }}>
-              {q.children.map((c, idx) => (
-                <Col key={idx} className="gutter-row" xs={24} sm={12} md={8}>
+              {q.children.map((c) => (
+                <Col key={c.id} className="gutter-row" xs={24} sm={12} md={8}>
                   <QuizCard
-                    title={c.title}
+                    id={c.id}
+                    title={c.name}
                     total={c.total}
                     timeExpired={c.timeExpired}
                     rate={c.rate}
@@ -35,7 +41,7 @@ export default function Home() {
         }))}
         centered
       />
-      <div className="resume-container">
+      {/* <div className="resume-container">
         <Title level={4} style={{ margin: "12px 0" }}>
           Continue Quiz
         </Title>
@@ -44,7 +50,7 @@ export default function Home() {
             <ContinueCard />
           </Col>
         </Row>
-      </div>
+      </div> */}
     </>
   );
 }

@@ -92,3 +92,17 @@
     padding: 8px 14px;
   }
 }
+
+.container_logo_user {
+  position: relative;;
+}
+
+.logout_text {
+  position: absolute;
+  left: -6px;
+}
+
+.logout_text a {
+  text-decoration: none;
+  color: #133e61;
+}
