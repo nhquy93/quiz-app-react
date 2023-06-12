@@ -5,9 +5,10 @@ export async function toast(type, msg) {
         position: "top-end",
         icon: type,
         showConfirmButton: false,
-        timer: 3000,
+        timer: 50000,
         toast: true,
-        title: msg
+        title: msg,
+        customClass: "message-alert"
     });
 }
 
