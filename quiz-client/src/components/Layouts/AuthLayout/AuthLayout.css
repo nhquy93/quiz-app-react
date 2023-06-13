@@ -1,0 +1,28 @@
+.root {
+  display: flex;
+  height: 100vh;
+  background-color: white;
+}
+
+.left-section {
+  flex: 4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.right-section {
+  flex: 5;
+  background: linear-gradient(90deg, #00d2ff 0%, #3a47d5 100%);
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.background-title {
+  margin: 0;
+  text-align: center;
+  padding-top: 4px;
+}

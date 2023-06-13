@@ -1,7 +1,5 @@
-import s from "./style.module.css";
+import "./FieldError.css";
 
-export function FieldError({msg}) {
-    return (
-        <span className={s.container}>{msg}</span>
-        );
+export function FieldError({ msg }) {
+  return <span className="ctn-field-err">{msg}</span>;
 }
