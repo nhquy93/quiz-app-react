@@ -29,7 +29,7 @@ export function SignIn() {
   };
   return (
     <AuthLayout>
-      <LoginForm onSubmit={submit} onLoading={loading} />
+      <LoginForm onSubmit={submit} onLoading={loading || false} />
     </AuthLayout>
   );
 }
