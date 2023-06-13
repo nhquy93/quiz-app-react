@@ -1,13 +1,17 @@
 import "./LoginForm.css";
+import logo from "./../../assets/quiz-icon-primary.svg";
 import { MailOutlined, UserOutlined } from "@ant-design/icons";
-import { Form, Input, Button, Card } from "antd";
+import { Form, Input, Button, Card, Image } from "antd";
 
 const { Item } = Form;
 
-export function LoginForm({ onSubmit }) {
+export function LoginForm({ onSubmit, onLoading }) {
   const [form] = Form.useForm();
   return (
     <Card className="card-wrapper">
+      <div className="logo">
+        <Image src={logo} preview={false} />
+      </div>
       <div className="form-title">
         Signin <br /> to access your team quiz
       </div>
@@ -47,6 +51,7 @@ export function LoginForm({ onSubmit }) {
                 type="primary"
                 htmlType="submit"
                 disabled={
+                  onLoading ||
                   !form.isFieldsTouched(true) ||
                   !!form.getFieldsError().filter(({ errors }) => errors.length)
                     .length
