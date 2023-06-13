@@ -1,25 +1,14 @@
-import s from "./style.module.css";
+import { Image } from "antd";
+import "./AuthLayout.css";
+import logo from "./../../../assets/quiz-icon-white.svg";
 
 export function AuthLayout({ children }) {
-  const header = (
-    <div className={s.header}>
-      <h3 className={s.logoTitle}>QuizApp</h3>
-    </div>
-  );
-
-  const background = (
-    <div>
-      <div className="d-flex">
-        <h1 className={s.backgroundTitle}>QuizApp</h1>
-      </div>
-    </div>
-  );
-
   return (
-    <div className={s.root}>
-      {header}
-      <div className={s.leftSection}>{children}</div>
-      <div className={`${s.rightSection} d-none d-lg-flex`}>{background}</div>
+    <div className="root">
+      <div className="left-section">{children}</div>
+      <div className="d-none d-lg-flex right-section">
+        <Image src={logo} preview={false} />
+      </div>
     </div>
   );
 }

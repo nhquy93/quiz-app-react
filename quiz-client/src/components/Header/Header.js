@@ -30,7 +30,7 @@ export default function Header(props) {
   let questionGroup = {};
 
   useEffect(() => {
-    if (questionGroupId != undefined) {
+    if (questionGroupId !== undefined) {
       topicList.forEach((groups) => {
         const item = groups.questionGroups.find(
           (x) => x.id === questionGroupId
