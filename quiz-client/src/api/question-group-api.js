@@ -1,11 +1,15 @@
 import axios from "axios";
-import { toast } from "../utils/sweet-alert";
 import { BASE_URL, ROUTE_PATH } from "../constants/route-path.constant";
-export class TopicAPI {
-  static async fetchTopics() {
+import { toast } from "../utils/sweet-alert";
+
+export class QuestionGroupAPI {
+  static async fetchQuestionGroupById(topicId) {
     try {
-      const result = (await axios.get(`${BASE_URL + ROUTE_PATH.topic}/getall`))
-        .data;
+      const result = (
+        await axios.get(
+          `${BASE_URL + ROUTE_PATH.questionGroup}/getbyid/${topicId}`
+        )
+      ).data;
       if (result.isSuccessed) {
         return result.resultObj;
       } else {
@@ -16,11 +20,13 @@ export class TopicAPI {
     }
   }
 
-  static async fetchAllIncludeQuestionGroup() {
+  static async fetchQuestionsById(topicId) {
     try {
       const result = (
         await axios.get(
-          `${BASE_URL + ROUTE_PATH.topic}/getallincludequestiongroup`
+          `${
+            BASE_URL + ROUTE_PATH.questionGroup
+          }/getincludequestionbyid/${topicId}`
         )
       ).data;
       if (result.isSuccessed) {

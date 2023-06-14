@@ -10,48 +10,27 @@ import {
 } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import "./Header.css";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../store/auth/auth-slice";
 import { setSearchItems } from "../../store/utils/utils-slice";
+import { GetReturnTime } from "../../utils/Time2String";
+import { toastConfirm } from "../../utils/sweet-alert";
 
 const { Title, Text } = Typography;
 
 export default function Header(props) {
   const { pathname } = useLocation();
   const dispatch = useDispatch();
-  const { questionGroupId } = useParams();
-
-  const topicList = useSelector((store) => store.topicsSlice.topicList);
+  const { detail } = useSelector((store) => store.detailSlice);
   const user = useSelector((store) => store.authSlice.auth.user);
   const [searchItem, setSearchItem] = useState("");
-  const [timeExpired, setTimeExpired] = useState(0);
-
-  let questionGroup = {};
-
-  useEffect(() => {
-    if (questionGroupId !== undefined) {
-      topicList.forEach((groups) => {
-        const item = groups.questionGroups.find(
-          (x) => x.id === questionGroupId
-        );
-        if (item) {
-          questionGroup = { ...item };
-          if (questionGroup) {
-            setTimeExpired(questionGroup.timeExpired); // 180
-          }
-        }
-      });
-    }
-  }, [timeExpired, questionGroupId, topicList.length]);
 
   useEffect(() => {
     dispatch(setSearchItems(searchItem));
-  }, [searchItem]);
+  }, [searchItem, dispatch]);
 
-  function signout() {
-    dispatch(setUser(null));
-  }
+  const signout = () => dispatch(setUser(null));
 
   return (
     <div className="header">
@@ -63,10 +42,17 @@ export default function Header(props) {
         />
       )}
       {pathname.includes("detail") && (
-        <DetailHeader title="UI UX Design" desc="GET 100 Points" rate="4.8" />
+        <DetailHeader
+          title={detail?.name || ""}
+          desc={`Get ${detail?.totalQuestion * 10} Points` || 0}
+          rate={detail?.rate || 0}
+        />
       )}
       {pathname.includes("start") && (
-        <StartHeader title="UI UX Design" timeExpired={timeExpired} />
+        <StartHeader
+          title={detail?.name || ""}
+          timeExpired={detail?.timeExpired || 0}
+        />
       )}
     </div>
   );
@@ -134,32 +120,27 @@ const DetailHeader = ({ title, desc, rate }) => (
 );
 
 const StartHeader = ({ title, timeExpired }) => {
-  const timeLeft = React.useRef(0);
+  const KEY = 'tick-timing'
+  const localTime = Number(localStorage.getItem(KEY) || 0)
+  const [timeLeft, setTimeLeft] = useState(timeExpired || localTime);
   const [timeDisplay, setTimeDisplay] = useState();
 
   useEffect(() => {
-    // if (timeExpired == 0) return;
-    timeLeft.current = timeExpired;
-    const interval = setInterval(() => {
-      timeLeft.current = timeLeft.current - 1;
-      const time = getReturnValues();
-      setTimeDisplay(time);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [timeExpired]);
-
-  useEffect(() => {
-    // console.log(timeLeft);
+    const logicTimer = () => {
+      if (timeLeft === 0) {
+        // Logic when time has been over here
+        toastConfirm("Time over!!!", "success");
+        return;
+      } else {
+        setTimeLeft((prev) => prev - 1);
+        localStorage.setItem(KEY, timeLeft - 1)
+        const time = GetReturnTime(timeLeft);
+        setTimeDisplay(time);
+      }
+    };
+    const timeOutId = setTimeout(logicTimer, 1000);
+    return () => clearTimeout(timeOutId);
   }, [timeLeft]);
-
-  const getReturnValues = () => {
-    const mins = parseInt(timeLeft.current / 60, 10);
-    const secs = parseInt(timeLeft.current % 60, 10);
-
-    return (
-      (mins < 10 ? "0" + mins : mins) + ":" + (secs < 10 ? "0" + secs : secs)
-    );
-  };
 
   return (
     <>
