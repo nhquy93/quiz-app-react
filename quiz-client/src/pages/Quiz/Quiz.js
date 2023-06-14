@@ -1,49 +1,59 @@
 import { Avatar, Button, List, Tabs, Typography } from "antd";
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import "./Quiz.css";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addAnswered } from "../../store/answered/answered-slice";
 import { toastConfirm } from "../../utils/sweet-alert";
+import { QuestionGroupAPI } from "../../api/question-group-api";
 
 const { Title, Text } = Typography;
 const { Item } = List;
 
 export default function Quiz() {
-  const { questionGroupId } = useParams();
   const dispatch = useDispatch();
-  const topicList = useSelector((store) => store.topicsSlice.topicList);
+  const navigate = useNavigate();
+  const { questionGroupId } = useParams();
+  const [questions, setQuestions] = useState([]);
+  const [tabActive, setTabActive] = useState(1);
   const answeredList = useSelector((store) => store.answeredSlice.answeredList);
 
-  let questionGroup = {};
-  topicList.forEach((groups) => {
-    const item = groups.questionGroups.find((x) => x.id === questionGroupId);
-    if (item) {
-      questionGroup = { ...item };
-      localStorage.setItem("timeExpired", questionGroup.timeExpired);
-      return questionGroup;
-    }
-  });
+  const fetchQuizById = async () =>
+    await QuestionGroupAPI.fetchQuestionsById(questionGroupId);
 
-  const questions = [];
-  questionGroup?.questions?.map((item, index) => {
-    questions.push({
-      key: (index + 1).toString(),
-      label: (index + 1).toString(),
-      children: [
-        {
-          id: item.id,
-          answer: item.answer,
-          question: item.name,
-          answers: [...item.answerList].filter((x) => x !== ""),
-        },
-      ],
-    });
-    return questions;
-  });
+  useEffect(() => {
+    let _questions = [];
+    fetchQuizById()
+      .then((res) => {
+        _questions = res?.questions?.map((e, idx) => {
+          return {
+            key: (idx + 1).toString(),
+            label: (idx + 1).toString(),
+            children: [
+              {
+                id: e.id,
+                answer: e.answer,
+                question: e.name,
+                answers: [...e.answerList].filter((x) => x !== ""),
+              },
+            ],
+          };
+        });
+        setQuestions(_questions);
+      })
+      .catch((err) => {
+        if (err.statusCode === 404) {
+          window.location.href = "/404";
+          return;
+        }
+      });
+  }, []);
 
-  const [tabActive, setTabActive] = useState(1);
+  useEffect(() => {
+    window.onbeforeunload = () => true;
+    return 
+  }, []);
 
   const hdlTabClick = (tabNodeKey) => {
     setTabActive(tabNodeKey);
@@ -98,6 +108,7 @@ export default function Quiz() {
         activeKey={tabActive.toString()}
         defaultActiveKey="1"
         onTabClick={hdlTabClick}
+        centered
       />
       <div className="submit-quiz">
         <Avatar
@@ -130,33 +141,38 @@ function SelectionListLayout({ id, answer, question, answers, selectedOpt }) {
   };
 
   return (
-    <>
-      <Title id={`question__${id}`} style={{ marginTop: 12 }} level={5}>
-        {question}
-      </Title>
-      <List
-        dataSource={answers}
-        renderItem={(e, idx) => (
-          <Item
-            key={idx}
-            id={`answer__${idx}`}
-            onClick={() => hdlClick({ id, answer, idx })}
-          >
-            <Item.Meta
-              avatar={
-                <Avatar className={idx === selectAnswer ? "active" : ""}>
-                  {String.fromCharCode(65 + idx)}
-                </Avatar>
-              }
-              description={
-                <Text style={{ color: idx === selectAnswer ? "#008bff" : "" }}>
-                  {e}
-                </Text>
-              }
-            />
-          </Item>
-        )}
-      ></List>
-    </>
+    <div className="wrapper">
+      <div className="wrapper-content">
+        <Title id={`question__${id}`} style={{ marginTop: 12 }} level={5}>
+          {question}
+        </Title>
+        <List
+          dataSource={answers}
+          renderItem={(e, idx) => (
+            <Item
+              key={idx}
+              id={`answer__${idx}`}
+              style={{ cursor: "pointer" }}
+              onClick={() => hdlClick({ id, answer, idx })}
+            >
+              <Item.Meta
+                avatar={
+                  <Avatar className={idx === selectAnswer ? "active" : ""}>
+                    {String.fromCharCode(65 + idx)}
+                  </Avatar>
+                }
+                description={
+                  <Text
+                    style={{ color: idx === selectAnswer ? "#008bff" : "" }}
+                  >
+                    {e}
+                  </Text>
+                }
+              />
+            </Item>
+          )}
+        />
+      </div>
+    </div>
   );
 }

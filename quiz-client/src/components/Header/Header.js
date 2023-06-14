@@ -120,7 +120,9 @@ const DetailHeader = ({ title, desc, rate }) => (
 );
 
 const StartHeader = ({ title, timeExpired }) => {
-  const [timeLeft, setTimeLeft] = useState(timeExpired || 0);
+  const KEY = 'tick-timing'
+  const localTime = Number(localStorage.getItem(KEY) || 0)
+  const [timeLeft, setTimeLeft] = useState(timeExpired || localTime);
   const [timeDisplay, setTimeDisplay] = useState();
 
   useEffect(() => {
@@ -131,6 +133,7 @@ const StartHeader = ({ title, timeExpired }) => {
         return;
       } else {
         setTimeLeft((prev) => prev - 1);
+        localStorage.setItem(KEY, timeLeft - 1)
         const time = GetReturnTime(timeLeft);
         setTimeDisplay(time);
       }

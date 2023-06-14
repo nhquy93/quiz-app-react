@@ -19,3 +19,25 @@
     color: #fff;
     background-color: #008bff;
 }
+
+.ant-list-items .ant-list-item-meta {
+  align-items: center;
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2em;
+}
+
+.wrapper-content {
+  width: 100%;
+}
+
+@media screen and (min-width: 576px) {
+  .wrapper-content {
+    width: fit-content;
+    min-width: 480px;
+  }  
+}
