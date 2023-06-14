@@ -1,16 +1,12 @@
 import axios from "axios";
-import { toast } from "../utils/sweet-alert";
 import { BASE_URL, ROUTE_PATH } from "../constants/route-path.constant";
+import { toast } from "../utils/sweet-alert";
 
-export class ParticipantAPI {
-  static async create(participant) {
+export class QuestionGroupAPI {
+  static async fetchQuestionGroupById(topicId) {
     try {
-      const result = (
-        await axios.post(
-          `${BASE_URL + ROUTE_PATH.participant}/create`,
-          participant
-        )
-      ).data;
+      const result = (await axios.get(`${BASE_URL + ROUTE_PATH.questionGroup}/getbyid/${topicId}`))
+        .data;
       if (result.isSuccessed) {
         return result.resultObj;
       } else {

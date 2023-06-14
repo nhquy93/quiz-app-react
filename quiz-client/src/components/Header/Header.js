@@ -10,7 +10,7 @@ import {
 } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import "./Header.css";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../store/auth/auth-slice";
 import { setSearchItems } from "../../store/utils/utils-slice";
@@ -22,29 +22,9 @@ const { Title, Text } = Typography;
 export default function Header(props) {
   const { pathname } = useLocation();
   const dispatch = useDispatch();
-  const { questionGroupId } = useParams();
-
-  const topicList = useSelector((store) => store.topicsSlice.topicList);
+  const { detail } = useSelector((store) => store.detailSlice);
   const user = useSelector((store) => store.authSlice.auth.user);
   const [searchItem, setSearchItem] = useState("");
-  const [timeExpired, setTimeExpired] = useState(0);
-
-  useEffect(() => {
-    let questionGroup = {};
-    if (questionGroupId !== undefined) {
-      topicList.forEach((groups) => {
-        const item = groups.questionGroups.find(
-          (x) => x.id === questionGroupId
-        );
-        if (item) {
-          questionGroup = { ...item };
-          if (questionGroup) {
-            setTimeExpired(questionGroup.timeExpired); // 180
-          }
-        }
-      });
-    }
-  }, [timeExpired, questionGroupId, topicList]);
 
   useEffect(() => {
     dispatch(setSearchItems(searchItem));
@@ -62,10 +42,17 @@ export default function Header(props) {
         />
       )}
       {pathname.includes("detail") && (
-        <DetailHeader title="UI UX Design" desc="GET 100 Points" rate="4.8" />
+        <DetailHeader
+          title={detail?.name || ""}
+          desc={`Get ${detail?.totalQuestion * 10} Points` || 0}
+          rate={detail?.rate || 0}
+        />
       )}
       {pathname.includes("start") && (
-        <StartHeader title="UI UX Design" timeExpired={10} />
+        <StartHeader
+          title={detail?.name || ""}
+          timeExpired={detail?.timeExpired || 0}
+        />
       )}
     </div>
   );

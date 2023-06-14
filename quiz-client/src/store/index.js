@@ -17,9 +17,11 @@ import storage from "redux-persist/lib/storage";
 import { answeredReducer } from "./answered/answered-slice";
 import { authReducer } from "./auth/auth-slice";
 import { utilsReducer } from "./utils/utils-slice";
+import { detailReducer } from "./detail/detail-slice";
 
 const rootReducer = combineReducers({
   topicsSlice: topicsReducer,
+  detailSlice: detailReducer,
   answeredSlice: answeredReducer,
   authSlice: authReducer,
   utilsSlice: utilsReducer

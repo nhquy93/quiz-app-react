@@ -30,7 +30,7 @@ export default function Home() {
                   <QuizCard
                     id={c.id}
                     title={c.name}
-                    total={c.total}
+                    total={c.totalQuestion}
                     timeExpired={c.timeExpired}
                     rate={c.rate}
                   />

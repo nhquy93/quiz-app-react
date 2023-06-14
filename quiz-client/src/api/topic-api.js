@@ -1,13 +1,11 @@
 import axios from "axios";
 import { toast } from "../utils/sweet-alert";
-
-//const BASE_URL = "https://localhost:7117/api/topic";
-const BASE_URL = "http://quizappdemo.somee.com/api/topic";
-
+import { BASE_URL, ROUTE_PATH } from "../constants/route-path.constant";
 export class TopicAPI {
-  static async fetchAll() {
+  static async fetchTopics() {
     try {
-      const result = (await axios.get(`${BASE_URL}/getall`)).data;
+      const result = (await axios.get(`${BASE_URL + ROUTE_PATH.topic}/getall`))
+        .data;
       if (result.isSuccessed) {
         return result.resultObj;
       } else {
@@ -20,7 +18,11 @@ export class TopicAPI {
 
   static async fetchAllIncludeQuestionGroup() {
     try {
-      const result = (await axios.get(`${BASE_URL}/getallincludequestiongroup`)).data;
+      const result = (
+        await axios.get(
+          `${BASE_URL + ROUTE_PATH.topic}/getallincludequestiongroup`
+        )
+      ).data;
       if (result.isSuccessed) {
         return result.resultObj;
       } else {

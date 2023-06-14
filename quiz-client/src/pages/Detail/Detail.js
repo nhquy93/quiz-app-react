@@ -4,42 +4,52 @@ import {
   StarOutlined,
 } from "@ant-design/icons";
 import { Typography, Row, Col, Space, Avatar } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Detail.css";
 import StartButton from "../../components/Start-Button/StartButton";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Time2String } from "../../utils/Time2String";
+import { QuestionGroupAPI } from "../../api/question-group-api";
+import { getQuizDetail } from "../../store/detail/detail-slice";
 
 const { Title, Text } = Typography;
 
 export default function Detail() {
+  const dispatch = useDispatch();
   const { questionGroupId } = useParams();
+  const [detail, setDetail] = useState(null);
 
-  const topicList = useSelector((store) => store.topicsSlice.topicList);
+  const fetchDetailById = async () => {
+    const topic = await QuestionGroupAPI.fetchQuestionGroupById(
+      questionGroupId
+    );
+    setDetail(topic);
+    dispatch(getQuizDetail(topic));
+  };
 
-  let questionGroup = {};
-  topicList.forEach((groups) => {
-    const item = groups.questionGroups.find((x) => x.id === questionGroupId);
-    if (item) {
-      questionGroup = { ...item };
-      return questionGroup;
-    }
-  });
+  useEffect(() => {
+    fetchDetailById().catch((err) => {
+      if (err.statusCode === 404) {
+        window.location.href = "/404";
+        return;
+      }
+    });
+  }, []);
 
   const describes = [
     {
-      title: `${questionGroup.total} Question(s)`,
+      title: `${detail?.totalQuestion || 0} Question(s)`,
       desc: "10 point for a correct answer",
       icon: <FileDoneOutlined />,
     },
     {
-      title: `${Time2String(questionGroup.timeExpired)}`,
+      title: `${Time2String(detail?.timeExpired || 0)}`,
       desc: "Total duration of the quiz",
       icon: <ClockCircleOutlined />,
     },
     {
-      title: `Win ${questionGroup.total} star`,
+      title: `Win 5 star`,
       desc: "Answer all questions correctly",
       icon: <StarOutlined />,
     },
