@@ -30,16 +30,16 @@ export default function Quiz() {
   questionGroup?.questions?.map((item, index) => {
     questions.push({
       key: (index + 1).toString(),
-        label: (index + 1).toString(),
-        children: [
-          {
-            id: item.id,
-            answer: item.answer,
-            question: item.name,
-            answers: [...(item.answerList)].filter(x => x !== "")
-          }
-        ]
-    })
+      label: (index + 1).toString(),
+      children: [
+        {
+          id: item.id,
+          answer: item.answer,
+          question: item.name,
+          answers: [...item.answerList].filter((x) => x !== ""),
+        },
+      ],
+    });
     return questions;
   });
 
@@ -48,7 +48,7 @@ export default function Quiz() {
   const hdlTabClick = (tabNodeKey) => {
     setTabActive(tabNodeKey);
   };
-  
+
   const hdlBack = () => {
     if (+tabActive === 1) return;
     setTabActive((prevState) => prevState - 1);
@@ -60,23 +60,20 @@ export default function Quiz() {
 
   /// Selected Answer
   const hdlSelectedOpt = (e) => {
-    dispatch(addAnswered({...e}));
+    dispatch(addAnswered({ ...e }));
   };
 
-  function onSubmitQuiz() {
+  const onSubmitQuiz = () => {
     let score = 0;
-    answeredList.map((item)=>{
-      if(item.answer === (item.idx + 1)) {
-        score +=1;
+    answeredList.map((item) => {
+      if (item.answer === item.idx + 1) {
+        score += 1;
       }
       return score;
-    })
-
+    });
     toastConfirm(`Your score: ${score}/${answeredList.length}`, "success");
-    console.log(`${score}/${answeredList.length}`);
-  }
-  
-  //console.log(arr);
+  };
+
   return (
     <>
       <Tabs
@@ -96,7 +93,7 @@ export default function Quiz() {
               answers={c.answers}
               selectedOpt={hdlSelectedOpt}
             />
-          ))
+          )),
         }))}
         activeKey={tabActive.toString()}
         defaultActiveKey="1"
@@ -110,7 +107,7 @@ export default function Quiz() {
           size={40}
           icon={<LeftOutlined />}
         />
-        <Button type="default" onClick={() => {onSubmitQuiz()}}>
+        <Button type="default" onClick={onSubmitQuiz}>
           Submit Quiz
         </Button>
         <Avatar
@@ -140,7 +137,11 @@ function SelectionListLayout({ id, answer, question, answers, selectedOpt }) {
       <List
         dataSource={answers}
         renderItem={(e, idx) => (
-          <Item key={idx} id={`answer__${idx}`} onClick={() => hdlClick({id, answer, idx})}>
+          <Item
+            key={idx}
+            id={`answer__${idx}`}
+            onClick={() => hdlClick({ id, answer, idx })}
+          >
             <Item.Meta
               avatar={
                 <Avatar className={idx === selectAnswer ? "active" : ""}>

@@ -14,6 +14,8 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../store/auth/auth-slice";
 import { setSearchItems } from "../../store/utils/utils-slice";
+import { GetReturnTime } from "../../utils/Time2String";
+import { toastConfirm } from "../../utils/sweet-alert";
 
 const { Title, Text } = Typography;
 
@@ -27,9 +29,8 @@ export default function Header(props) {
   const [searchItem, setSearchItem] = useState("");
   const [timeExpired, setTimeExpired] = useState(0);
 
-  let questionGroup = {};
-
   useEffect(() => {
+    let questionGroup = {};
     if (questionGroupId !== undefined) {
       topicList.forEach((groups) => {
         const item = groups.questionGroups.find(
@@ -43,15 +44,13 @@ export default function Header(props) {
         }
       });
     }
-  }, [timeExpired, questionGroupId, topicList.length]);
+  }, [timeExpired, questionGroupId, topicList]);
 
   useEffect(() => {
     dispatch(setSearchItems(searchItem));
-  }, [searchItem]);
+  }, [searchItem, dispatch]);
 
-  function signout() {
-    dispatch(setUser(null));
-  }
+  const signout = () => dispatch(setUser(null));
 
   return (
     <div className="header">
@@ -66,7 +65,7 @@ export default function Header(props) {
         <DetailHeader title="UI UX Design" desc="GET 100 Points" rate="4.8" />
       )}
       {pathname.includes("start") && (
-        <StartHeader title="UI UX Design" timeExpired={timeExpired} />
+        <StartHeader title="UI UX Design" timeExpired={10} />
       )}
     </div>
   );
@@ -134,32 +133,24 @@ const DetailHeader = ({ title, desc, rate }) => (
 );
 
 const StartHeader = ({ title, timeExpired }) => {
-  const timeLeft = React.useRef(0);
+  const [timeLeft, setTimeLeft] = useState(timeExpired || 0);
   const [timeDisplay, setTimeDisplay] = useState();
 
   useEffect(() => {
-    // if (timeExpired == 0) return;
-    timeLeft.current = timeExpired;
-    const interval = setInterval(() => {
-      timeLeft.current = timeLeft.current - 1;
-      const time = getReturnValues();
-      setTimeDisplay(time);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [timeExpired]);
-
-  useEffect(() => {
-    // console.log(timeLeft);
+    const logicTimer = () => {
+      if (timeLeft === 0) {
+        // Logic when time has been over here
+        toastConfirm("Time over!!!", "success");
+        return;
+      } else {
+        setTimeLeft((prev) => prev - 1);
+        const time = GetReturnTime(timeLeft);
+        setTimeDisplay(time);
+      }
+    };
+    const timeOutId = setTimeout(logicTimer, 1000);
+    return () => clearTimeout(timeOutId);
   }, [timeLeft]);
-
-  const getReturnValues = () => {
-    const mins = parseInt(timeLeft.current / 60, 10);
-    const secs = parseInt(timeLeft.current % 60, 10);
-
-    return (
-      (mins < 10 ? "0" + mins : mins) + ":" + (secs < 10 ? "0" + secs : secs)
-    );
-  };
 
   return (
     <>
