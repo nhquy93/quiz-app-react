@@ -18,7 +18,7 @@ function PageBrowser() {
 
   useEffect(() => {
     fetchAll().catch((err) => {
-      if (err.response.status === 404) {
+      if (err.statusCode === 404) {
         window.location.href = "/404";
         return;
       }

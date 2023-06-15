@@ -20,7 +20,7 @@
     background-color: #008bff;
 }
 
-.ant-list-items .ant-list-item-meta {
+.ant-list-items .ant-list-item .ant-list-item-meta {
   align-items: center;
 }
 

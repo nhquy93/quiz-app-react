@@ -16,6 +16,7 @@ import { setUser } from "../../store/auth/auth-slice";
 import { setSearchItems } from "../../store/utils/utils-slice";
 import { GetReturnTime } from "../../utils/Time2String";
 import { toastConfirm } from "../../utils/sweet-alert";
+import { KEYS } from "../../constants/keys.constant";
 
 const { Title, Text } = Typography;
 
@@ -120,8 +121,9 @@ const DetailHeader = ({ title, desc, rate }) => (
 );
 
 const StartHeader = ({ title, timeExpired }) => {
-  const KEY = 'tick-timing'
-  const localTime = Number(localStorage.getItem(KEY) || 0)
+  const localTitle = localStorage.getItem(KEYS.quizName || "");
+  const localTime = Number(localStorage.getItem(KEYS.tickTiming) || 0);
+  const [quizName, setQuizName] = useState(title || localTitle);
   const [timeLeft, setTimeLeft] = useState(timeExpired || localTime);
   const [timeDisplay, setTimeDisplay] = useState();
 
@@ -133,7 +135,7 @@ const StartHeader = ({ title, timeExpired }) => {
         return;
       } else {
         setTimeLeft((prev) => prev - 1);
-        localStorage.setItem(KEY, timeLeft - 1)
+        localStorage.setItem(KEYS.tickTiming, timeLeft - 1);
         const time = GetReturnTime(timeLeft);
         setTimeDisplay(time);
       }
@@ -142,6 +144,10 @@ const StartHeader = ({ title, timeExpired }) => {
     return () => clearTimeout(timeOutId);
   }, [timeLeft]);
 
+  useEffect(() => {
+    localStorage.setItem(KEYS.quizName, quizName);
+  }, [quizName]);
+
   return (
     <>
       <div className="header__menu">
@@ -149,7 +155,7 @@ const StartHeader = ({ title, timeExpired }) => {
           <Link to={"/"}>
             <ArrowLeftOutlined style={{ fontSize: "18px", marginRight: 12 }} />
           </Link>
-          <Text className="header__menu__title">{title}</Text>
+          <Text className="header__menu__title">{quizName}</Text>
         </span>
         <span className="time-box">
           <ClockCircleOutlined />
