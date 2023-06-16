@@ -1,12 +1,16 @@
-import { Avatar, Button, List, Tabs, Typography } from "antd";
+import { Avatar, Button, List, Skeleton, Tabs, Typography } from "antd";
 import { React, useEffect, useState } from "react";
 import "./Quiz.css";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addAnswered } from "../../store/answered/answered-slice";
 import { toastConfirm } from "../../utils/sweet-alert";
-import { QuestionGroupAPI } from "../../api/question-group-api";
+import { KEYS } from "../../constants/keys.constant";
+import { fetchQuestionsById } from "../../api/questionGroupApi";
+import { authSelector } from "../../store/features/authSlice";
+import { detailSelector } from "../../store/features/detailSlice";
+import { addAnswered, resultSelector } from "../../store/features/resultSlice";
+import { postResult } from "../../api/participantResultApi";
 
 const { Title, Text } = Typography;
 const { Item } = List;
@@ -15,101 +19,115 @@ export default function Quiz() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { questionGroupId } = useParams();
-  const [questions, setQuestions] = useState([]);
-  const [tabActive, setTabActive] = useState(1);
-  const answeredList = useSelector((store) => store.answeredSlice.answeredList);
+  const { auth } = useSelector(authSelector);
+  const { questions, isLoading } = useSelector(detailSelector);
+  const { answeredList, isSuccess } = useSelector(resultSelector);
+  const localActiveQuestion = localStorage.getItem(KEYS.activeQuestion);
+  const [quiz, setQuiz] = useState([]);
+  const [tabActive, setTabActive] = useState(localActiveQuestion || 1);
 
-  const fetchQuizById = async () =>
-    await QuestionGroupAPI.fetchQuestionsById(questionGroupId);
+  useEffect(() => {
+    dispatch(fetchQuestionsById(questionGroupId));
+  }, []);
 
   useEffect(() => {
     let _questions = [];
-    fetchQuizById()
-      .then((res) => {
-        _questions = res?.questions?.map((e, idx) => {
-          return {
-            key: (idx + 1).toString(),
-            label: (idx + 1).toString(),
-            children: [
-              {
-                id: e.id,
-                answer: e.answer,
-                question: e.name,
-                answers: [...e.answerList].filter((x) => x !== ""),
-              },
-            ],
-          };
-        });
-        setQuestions(_questions);
-      })
-      .catch((err) => {
-        if (err.statusCode === 404) {
-          window.location.href = "/404";
-          return;
-        }
-      });
-  }, []);
+    /// Map model for component ant-tab
+    _questions = questions?.questions?.map((e, idx) => {
+      return {
+        key: (idx + 1).toString(),
+        label: (idx + 1).toString(),
+        children: [
+          {
+            id: e.id,
+            answer: e.answer,
+            question: e.name,
+            answers: [...e.answerList].filter((x) => x !== ""),
+          },
+        ],
+      };
+    });
+    setQuiz(_questions);
+  }, [questions]);
 
   useEffect(() => {
-    window.onbeforeunload = () => true;
-    return 
-  }, []);
+    if (!isSuccess) return;
+    navigate("/");
+  }, [isSuccess]);
 
   const hdlTabClick = (tabNodeKey) => {
-    setTabActive(tabNodeKey);
+    setTabActive((prevState) => {
+      localStorage.setItem(KEYS.activeQuestion, Number(tabNodeKey));
+      return (prevState = Number(tabNodeKey));
+    });
   };
 
   const hdlBack = () => {
     if (+tabActive === 1) return;
-    setTabActive((prevState) => prevState - 1);
+    setTabActive((prevState) => {
+      localStorage.setItem(KEYS.activeQuestion, Number(prevState - 1));
+      return prevState - 1;
+    });
   };
   const hdlNext = () => {
     if (+tabActive === questions.length) return;
-    setTabActive((prevState) => prevState + 1);
-  };
-
-  /// Selected Answer
-  const hdlSelectedOpt = (e) => {
-    dispatch(addAnswered({ ...e }));
+    setTabActive((prevState) => {
+      localStorage.setItem(KEYS.activeQuestion, Number(prevState + 1));
+      return prevState + 1;
+    });
   };
 
   const onSubmitQuiz = () => {
     let score = 0;
     answeredList.map((item) => {
-      if (item.answer === item.idx + 1) {
-        score += 1;
-      }
+      if (item.answer === item.idx + 1) score += 1;
       return score;
     });
-    toastConfirm(`Your score: ${score}/${answeredList.length}`, "success");
+    toastConfirm(
+      `Your score: ${score}/${answeredList.length}`,
+      "success"
+    ).finally(() => {
+      const payload = {
+        score: score,
+        participantId: auth.user.id,
+        questionGroupId: questionGroupId,
+        isFinish: true,
+        timeTaken: Number(localStorage.getItem(KEYS.tickTiming) || 0),
+      };
+      dispatch(postResult({ ...payload }));
+    });
   };
 
   return (
     <>
-      <Tabs
-        items={questions.map((q, idx) => ({
-          ...q,
-          label: (
-            <Avatar className={idx === tabActive - 1 ? "active" : ""}>
-              {q.label}
-            </Avatar>
-          ),
-          children: q.children.map((c, idx) => (
-            <SelectionListLayout
-              key={idx}
-              id={c.id}
-              answer={c.answer}
-              question={c.question}
-              answers={c.answers}
-              selectedOpt={hdlSelectedOpt}
-            />
-          )),
-        }))}
-        activeKey={tabActive.toString()}
-        defaultActiveKey="1"
-        onTabClick={hdlTabClick}
-        centered
-      />
+      {isLoading ? (
+        <Skeleton active />
+      ) : (
+        <Tabs
+          items={quiz?.map((q, idx) => ({
+            ...q,
+            label: (
+              <Avatar className={idx === tabActive - 1 ? "active" : ""}>
+                {q.label}
+              </Avatar>
+            ),
+            children: q.children.map((c, idx) => (
+              <SelectionListLayout
+                key={idx}
+                id={c.id}
+                answer={c.answer}
+                question={c.question}
+                answers={c.answers}
+                selectedOpt={(e) => dispatch(addAnswered({ ...e }))}
+              />
+            )),
+          }))}
+          activeKey={`${tabActive || 1}`}
+          defaultActiveKey="1"
+          onTabClick={hdlTabClick}
+          centered
+        />
+      )}
       <div className="submit-quiz">
         <Avatar
           onClick={hdlBack}
@@ -123,7 +141,7 @@ export default function Quiz() {
         </Button>
         <Avatar
           onClick={hdlNext}
-          className={+tabActive === questions.length ? "" : "active"}
+          className={+tabActive === quiz?.length ? "" : "active"}
           style={{ cursor: "pointer", marginLeft: 24 }}
           size={40}
           icon={<RightOutlined />}
@@ -135,15 +153,27 @@ export default function Quiz() {
 
 function SelectionListLayout({ id, answer, question, answers, selectedOpt }) {
   const [selectAnswer, setSelectAnswer] = useState(null);
+
   const hdlClick = (selected) => {
     setSelectAnswer(selected.idx);
     selectedOpt(selected);
   };
 
+  useEffect(() => {
+    const localSelectedOpts = localStorage.getItem(KEYS.selectedOpts);
+    if (!localSelectedOpts) return;
+    const findAnswer = (JSON.parse(localSelectedOpts) || []).find(
+      (x) => x.id === id
+    );
+    if (findAnswer) {
+      setSelectAnswer(findAnswer.idx);
+    }
+  }, [id]);
+
   return (
     <div className="wrapper">
       <div className="wrapper-content">
-        <Title id={`question__${id}`} style={{ marginTop: 12 }} level={5}>
+        <Title id={`question__${id}`} level={3}>
           {question}
         </Title>
         <List

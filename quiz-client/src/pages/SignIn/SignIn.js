@@ -1,35 +1,30 @@
 import { useNavigate } from "react-router-dom";
 import "./SignIn.css";
-import { setUser } from "../../store/auth/auth-slice";
-import { useDispatch } from "react-redux";
-import { toast } from "../../utils/sweet-alert";
+import { authSelector } from "../../store/features/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { AuthLayout } from "../../components/Layouts/AuthLayout/AuthLayout";
-import { ParticipantAPI } from "../../api/participant-api";
+import { postUser } from "../../api/participantApi";
 import { LoginForm } from "../../components/LoginForm/LoginForm";
-import { useState } from "react";
+import { useEffect } from "react";
 
 export function SignIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const { auth, isLoading } = useSelector(authSelector);
 
-  const submit = async (values) => {
+  useEffect(() => {
+    const { user } = auth;
+    if (!user) return;
+    navigate("/");
+  }, [auth]);
+
+  const submit = (values) => {
     const { email, username } = values;
-    setLoading(true);
-    try {
-      const user = await ParticipantAPI.create({ email, username });
-      dispatch(setUser(user));
-      await toast("success", "Auth succeed");
-      navigate("/");
-    } catch (err) {
-      setLoading(false);
-      console.log("Auth failed");
-      await toast("error", "Invalid credentials " + err.message);
-    }
+    dispatch(postUser({ email, username }));
   };
   return (
     <AuthLayout>
-      <LoginForm onSubmit={submit} onLoading={loading || false} />
+      <LoginForm onSubmit={submit} onLoading={isLoading} />
     </AuthLayout>
   );
 }

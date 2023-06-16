@@ -1,8 +1,5 @@
-import {
-  combineReducers,
-  configureStore,
-} from "@reduxjs/toolkit";
-import { topicsReducer } from "./topics/topics-slice";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { topicsReducer } from "./features/topicsSlice";
 import {
   FLUSH,
   PAUSE,
@@ -14,17 +11,17 @@ import {
   persistStore,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import { answeredReducer } from "./answered/answered-slice";
-import { authReducer } from "./auth/auth-slice";
-import { utilsReducer } from "./utils/utils-slice";
-import { detailReducer } from "./detail/detail-slice";
+import { resultReducer } from "./features/resultSlice";
+import { authReducer } from "./features/authSlice";
+import { utilsReducer } from "./features/utilSlice";
+import { detailReducer } from "./features/detailSlice";
 
 const rootReducer = combineReducers({
   topicsSlice: topicsReducer,
   detailSlice: detailReducer,
-  answeredSlice: answeredReducer,
+  resultSlice: resultReducer,
   authSlice: authReducer,
-  utilsSlice: utilsReducer
+  utilsSlice: utilsReducer,
 });
 
 const persistConfig = {
@@ -42,8 +39,8 @@ const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: {
         ignoreActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      }
-    })
+      },
+    }),
 });
 
 const persistor = persistStore(store);
