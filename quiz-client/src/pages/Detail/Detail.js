@@ -6,12 +6,12 @@ import {
 import { Typography, Row, Col, Space, Avatar } from "antd";
 import React, { useEffect, useState } from "react";
 import "./Detail.css";
-import StartButton from "../../components/Start-Button/StartButton";
+import StartButton from "../../components/StartButton/StartButton";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { Time2String } from "../../utils/Time2String";
-import { QuestionGroupAPI } from "../../api/question-group-api";
-import { getQuizDetail } from "../../store/detail/detail-slice";
+import { QuestionGroupAPI } from "../../api/questionGroupApi";
+import { getQuizDetail } from "../../store/features/detailSlice";
 
 const { Title, Text } = Typography;
 

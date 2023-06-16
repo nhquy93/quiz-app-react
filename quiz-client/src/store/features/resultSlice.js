@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { KEYS } from "../../constants/keys.constant";
-import { ParticipantResultAPI } from "../../api/participant-result-api";
+import { ParticipantResultAPI } from "../../api/participantResultApi";
 
-export const answeredSlice = createSlice({
-  name: "answeredSlice",
+export const resultSlice = createSlice({
+  name: "resultSlice",
   initialState: {
     answeredList: [],
   },
@@ -23,12 +23,10 @@ export const answeredSlice = createSlice({
       );
     },
     postResult: (_, action) => {
-      ParticipantResultAPI.create(action.payload).then((res) => {
-        if (res.isSuccessed) window.location.href = "/";
-      });
+      ParticipantResultAPI.create(action.payload);
     },
   },
 });
 
-export const { addAnswered, postResult } = answeredSlice.actions;
-export const answeredReducer = answeredSlice.reducer;
+export const { addAnswered, postResult } = resultSlice.actions;
+export const answeredReducer = resultSlice.reducer;

@@ -1,6 +1,6 @@
 import "./Home.css";
 import { Tabs, Row, Col } from "antd";
-import QuizCard from "../../components/Quiz-Card/QuizCard";
+import QuizCard from "../../components/QuizCard/QuizCard";
 import { useSelector } from "react-redux";
 
 export default function Home() {

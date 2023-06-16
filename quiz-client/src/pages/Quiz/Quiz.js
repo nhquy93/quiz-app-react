@@ -4,9 +4,9 @@ import "./Quiz.css";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addAnswered, postResult } from "../../store/answered/answered-slice";
+import { addAnswered, postResult } from "../../store/features/resultSlice";
 import { toastConfirm } from "../../utils/sweet-alert";
-import { QuestionGroupAPI } from "../../api/question-group-api";
+import { QuestionGroupAPI } from "../../api/questionGroupApi";
 import { KEYS } from "../../constants/keys.constant";
 
 const { Title, Text } = Typography;

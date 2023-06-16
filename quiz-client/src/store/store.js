@@ -2,7 +2,7 @@ import {
   combineReducers,
   configureStore,
 } from "@reduxjs/toolkit";
-import { topicsReducer } from "./topics/topics-slice";
+import { topicsReducer } from "./features/topicSlice";
 import {
   FLUSH,
   PAUSE,
@@ -14,10 +14,10 @@ import {
   persistStore,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import { answeredReducer } from "./answered/answered-slice";
-import { authReducer } from "./auth/auth-slice";
-import { utilsReducer } from "./utils/utils-slice";
-import { detailReducer } from "./detail/detail-slice";
+import { answeredReducer } from "./features/resultSlice";
+import { authReducer } from "./features/authSlice";
+import { utilsReducer } from "./features/utilSlice";
+import { detailReducer } from "./features/detailSlice";
 
 const rootReducer = combineReducers({
   topicsSlice: topicsReducer,

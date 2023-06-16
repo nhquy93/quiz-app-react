@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import "./SignIn.css";
-import { setUser } from "../../store/auth/auth-slice";
+import { setUser } from "../../store/features/authSlice";
 import { useDispatch } from "react-redux";
 import { toast } from "../../utils/sweet-alert";
 import { AuthLayout } from "../../components/Layouts/AuthLayout/AuthLayout";
-import { ParticipantAPI } from "../../api/participant-api";
+import { ParticipantAPI } from "../../api/participantApi";
 import { LoginForm } from "../../components/LoginForm/LoginForm";
 import { useState } from "react";
 
