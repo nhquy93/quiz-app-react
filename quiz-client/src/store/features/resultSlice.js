@@ -1,12 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { KEYS } from "../../constants/keys.constant";
-import { ParticipantResultAPI } from "../../api/participantResultApi";
+import { postResult } from "../../api/participantResultApi";
+import { toast } from "../../utils/sweet-alert";
+
+const initialState = {
+  answeredList: [],
+  isSuccess: false,
+};
 
 export const resultSlice = createSlice({
   name: "resultSlice",
-  initialState: {
-    answeredList: [],
-  },
+  initialState,
   reducers: {
     addAnswered: (currentSlice, action) => {
       const indexToUpdate = currentSlice.answeredList.findIndex(
@@ -22,11 +26,23 @@ export const resultSlice = createSlice({
         JSON.stringify(currentSlice.answeredList)
       );
     },
-    postResult: (_, action) => {
-      ParticipantResultAPI.create(action.payload);
-    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(postResult.pending, (state) => {
+      state.isSuccess = false;
+    });
+    builder.addCase(postResult.fulfilled, (state) => {
+      state.isSuccess = true;
+      toast("success", "Your result submitted!");
+    });
+    builder.addCase(postResult.rejected, (state) => {
+      state.answeredList = [];
+      state.isSuccess = false;
+      toast("error", "Try again later!");
+    });
   },
 });
 
-export const { addAnswered, postResult } = resultSlice.actions;
-export const answeredReducer = resultSlice.reducer;
+export const { addAnswered } = resultSlice.actions;
+export const resultSelector = (state) => state.resultSlice;
+export const resultReducer = resultSlice.reducer;

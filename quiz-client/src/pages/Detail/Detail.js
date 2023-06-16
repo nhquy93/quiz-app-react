@@ -4,16 +4,13 @@ import {
   StarOutlined,
 } from "@ant-design/icons";
 import { Typography, Row, Col, Space, Avatar, Skeleton } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "./Detail.css";
 import StartButton from "../../components/StartButton/StartButton";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Time2String } from "../../utils/Time2String";
-import {
-  detailSelector,
-  getQuizDetail,
-} from "../../store/features/detailSlice";
+import { detailSelector } from "../../store/features/detailSlice";
 import { fetchQuestionGroupById } from "../../api/questionGroupApi";
 
 const { Title, Text } = Typography;
