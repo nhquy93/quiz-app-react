@@ -2,7 +2,7 @@ import {
   combineReducers,
   configureStore,
 } from "@reduxjs/toolkit";
-import { topicsReducer } from "./features/topicSlice";
+import { topicsReducer } from "./features/topicsSlice";
 import {
   FLUSH,
   PAUSE,

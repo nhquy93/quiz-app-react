@@ -12,24 +12,24 @@ import React, { useEffect, useState } from "react";
 import "./Header.css";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "../../store/features/authSlice";
-import { setSearchItems } from "../../store/features/utilSlice";
+import { authSelector, setUser } from "../../store/features/authSlice";
+import { searchItem, setSearchItems } from "../../store/features/utilSlice";
 import { GetReturnTime } from "../../utils/Time2String";
 import { toastConfirm } from "../../utils/sweet-alert";
 import { KEYS } from "../../constants/keys.constant";
 
 const { Title, Text } = Typography;
 
-export default function Header(props) {
-  const { pathname } = useLocation();
+export default function Header() {
   const dispatch = useDispatch();
+  const { pathname } = useLocation();
   const { detail } = useSelector((store) => store.detailSlice);
-  const user = useSelector((store) => store.authSlice.auth.user);
-  const [searchItem, setSearchItem] = useState("");
+  const user = useSelector(authSelector);
+  const [temp, setTemp] = useState("");
 
   useEffect(() => {
-    dispatch(setSearchItems(searchItem));
-  }, [searchItem, dispatch]);
+    dispatch(searchItem(temp));
+  }, [temp]);
 
   const signout = () => dispatch(setUser(null));
 
@@ -39,7 +39,7 @@ export default function Header(props) {
         <HomeHeader
           username={user.userName}
           onClickSignout={signout}
-          onSearchItem={setSearchItem}
+          onSearchItem={setTemp}
         />
       )}
       {pathname.includes("detail") && (
