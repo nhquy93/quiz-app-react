@@ -23,6 +23,7 @@ export const authSlice = createSlice({
       const { resultObj } = action.payload;
       state.auth.user = resultObj;
       state.isLoading = false;
+      toast("success", "Auth succeed");
     });
     builder.addCase(postUser.rejected, (state, action) => {
       const { message } = action.payload;
