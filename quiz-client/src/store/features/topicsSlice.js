@@ -40,7 +40,7 @@ export const topicsSlice = createSlice({
       const { message } = action.payload;
       state.topics = [];
       state.isLoading = false;
-      toast("error", message);
+      toast("error", message || "ERR_TIME_OUT");
     });
   },
 });

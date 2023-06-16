@@ -29,7 +29,7 @@ export const authSlice = createSlice({
       const { message } = action.payload;
       state.auth = { user: null };
       state.isLoading = false;
-      toast("error", message);
+      toast("error", message || "ERR_TIME_OUT");
     });
   },
 });

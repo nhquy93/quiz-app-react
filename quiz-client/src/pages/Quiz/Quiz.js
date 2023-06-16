@@ -22,36 +22,36 @@ export default function Quiz() {
   const [questions, setQuestions] = useState([]);
   const [tabActive, setTabActive] = useState(localActiveQuestion || 1);
 
-  const fetchQuizById = async () =>
-    await QuestionGroupAPI.fetchQuestionsById(questionGroupId);
+  // const fetchQuizById = async () =>
+  //   await QuestionGroupAPI.fetchQuestionsById(questionGroupId);
 
   useEffect(() => {
     let _questions = [];
-    fetchQuizById()
-      .then((res) => {
-        /// Map model for component ant-tab
-        _questions = res?.questions?.map((e, idx) => {
-          return {
-            key: (idx + 1).toString(),
-            label: (idx + 1).toString(),
-            children: [
-              {
-                id: e.id,
-                answer: e.answer,
-                question: e.name,
-                answers: [...e.answerList].filter((x) => x !== ""),
-              },
-            ],
-          };
-        });
-        setQuestions(_questions);
-      })
-      .catch((err) => {
-        if (err.statusCode === 404) {
-          window.location.href = "/404";
-          return;
-        }
-      });
+    // fetchQuizById()
+    //   .then((res) => {
+    //     /// Map model for component ant-tab
+    //     _questions = res?.questions?.map((e, idx) => {
+    //       return {
+    //         key: (idx + 1).toString(),
+    //         label: (idx + 1).toString(),
+    //         children: [
+    //           {
+    //             id: e.id,
+    //             answer: e.answer,
+    //             question: e.name,
+    //             answers: [...e.answerList].filter((x) => x !== ""),
+    //           },
+    //         ],
+    //       };
+    //     });
+    //     setQuestions(_questions);
+    //   })
+    //   .catch((err) => {
+    //     if (err.statusCode === 404) {
+    //       window.location.href = "/404";
+    //       return;
+    //     }
+    //   });
   }, []);
 
   const hdlTabClick = (tabNodeKey) => {
